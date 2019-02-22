@@ -1,6 +1,6 @@
 <%-- 
-    Document   : errorIO
-    Created on : 21-feb-2019, 12:57:42
+    Document   : errornumero
+    Created on : 21-feb-2019, 10:34:48
     Author     : USUARIO
 --%>
 
@@ -12,7 +12,7 @@
         <title>Ejemplo MVC</title>
     </head>
     <body>
-        <h1>Error IO</h1>
+        <h1>Error de Entrada/Salida</h1>
         <a href="index.jsp">Volver</a>
     </body>
 </html>

@@ -7,40 +7,44 @@ package modelo.persistencia;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import modelo.Persona;
+import modelo.logica.IPersonaDAO;
 
 /**
  *
  * @author USUARIO
  */
-public class FicheroPersona {
+public class FicheroPersona implements IPersonaDAO {
+    public static final String FICH = "C:\\Users\\USUARIO\\Documents\\NetBeansProjects\\curso_java_oracle_atos.git\\04_EjemploMVC\\persona.dat";
     
-    public static final String FICH = "C:\\Users\\USUARIO\\Documents\\NetBeansProjects\\04_EjemploMVC";
+    private static final FicheroPersona instancia = new FicheroPersona();
+    private FicheroPersona() { }
+    public static FicheroPersona getInstancia() { return instancia; }
     
-    public static boolean guardarPersona(Persona persona){
-        try{
-            ObjectOutputStream escribiendoFichero = new ObjectOutputStream(new FileOutputStream(FICH + "\\persona.dat"));
-            escribiendoFichero.writeObject(persona);
-            escribiendoFichero.close();
+    @Override
+    public boolean guardarPersona(Persona persona) {
+        try {
+            ObjectOutputStream escribFich = new ObjectOutputStream(
+                    new FileOutputStream(FICH ));
+            escribFich.writeObject(persona);
+            escribFich.close();                
             return true;
-        }catch (Exception e){
-            
+        } catch (Exception ex) {            
             return false;
-        }   
+        }
     }
-    
-        public static Persona leerPersona(){
-        try{
-            ObjectInputStream leyendoFichero = new ObjectInputStream(new FileInputStream(FICH + "\\persona.dat"));
-            Persona p = (Persona) leyendoFichero.readObject();
-            leyendoFichero.close();
+    @Override
+    public Persona leerPersona() {
+        try {
+            ObjectInputStream leyendoFich = new ObjectInputStream(
+                    new FileInputStream(FICH));
+            Persona p = (Persona) leyendoFich.readObject();
+            leyendoFich.close();                
             return p;
-            
-        }catch (Exception e){ 
+        } catch (Exception ex) {            
             return null;
-        }   
+        }
     }
 }

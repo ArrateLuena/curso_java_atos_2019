@@ -6,15 +6,13 @@
 <%@page import="modelo.Persona"%>
 <%@page import="modelo.logica.GestionPersona"%>
 <%
-    
     Persona p = GestionPersona.getInstancia().getPersona();
-    String nombre = "";
+    String nombre ="";
     int edad = 0;
-    if(p != null){
+    if (p != null) {
         nombre = p.getNombre();
         edad = p.getEdad();
     }
-  
 %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -26,9 +24,10 @@
     <body>
         <h1>Ejemplo MVC</h1>
         <form action="procesar.do" method="GET">
-            Nombre: <input id="nombre" type="text" name="nombre" value="<%= nombre %>"/><br/>
+            Nombre: <input id="nombre" type="text" name="nombre" 
+                           value="<%= nombre %>"/><br/>
             Edad: <input id="edad" type="text" name="edad" value="<%= edad %>"/><br/>
-            <input type="submit" value="Enviar datos"/>
+            <input type="submit" value="Enviar datos" />
         </form>
     </body>
 </html>

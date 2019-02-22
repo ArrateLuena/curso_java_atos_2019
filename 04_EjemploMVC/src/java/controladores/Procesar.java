@@ -14,8 +14,19 @@ import javax.servlet.http.HttpServletResponse;
 import modelo.Persona;
 import modelo.logica.GestionPersona;
 
+/**
+ *
+ * @author USUARIO
+ */
 public class Procesar extends HttpServlet {
-
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -24,43 +35,28 @@ public class Procesar extends HttpServlet {
         
         GestionPersona.TipoResultado resultado;
         resultado = GestionPersona.getInstancia().guardarPersona(nombre, edad);
-                
-        switch (resultado){
+        switch (resultado) {
             case OK:
-                request.getSession().setAttribute("persona1", GestionPersona.getInstancia().getPersona());
+                request.getSession().setAttribute("persona1", 
+                        GestionPersona.getInstancia().getPersona());
                 request.getRequestDispatcher("exito.jsp").forward(request, response);
-                
-                    break;
+                break;
             case SIN_VALORES:
-                request.getRequestDispatcher("errorCampos.jsp").forward(request, response);
-                            break;
+                request.getRequestDispatcher("errorcampos.jsp").forward(request, response);
+                break;
             case EDAD_MAL:
-                request.getRequestDispatcher("errorNumero.jsp").forward(request, response);
-                            break;
-            case ERROR_IO:
-            request.getRequestDispatcher("errorIO.jsp").forward(request, response);
-                        break;
-        }
-
-        
-        
-       /* if (nombre.equals("") || edad.equals(""))
-        {
-            request.getRequestDispatcher("errorcampos.jsp").forward(request, response);
-        } else {
-            int iEdad = 0;
-            try {
-                iEdad = Integer.parseInt(edad);
-            } catch (NumberFormatException ex) {
                 request.getRequestDispatcher("errornumero.jsp").forward(request, response);
-            }
-            Persona p1 = new Persona(nombre, iEdad);            
-            request.getSession().setAttribute("persona1", p1);
-            request.getRequestDispatcher("exito.jsp").forward(request, response);
-        }*/
+                break;
+            case ERR_IO:
+                request.getRequestDispatcher("errorio.jsp").forward(request, response);
+                break;
+        }
     }
- 
-    
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
     @Override
     public String getServletInfo() {
         return "Short description";

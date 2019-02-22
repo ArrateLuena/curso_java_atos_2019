@@ -7,6 +7,7 @@ package modelo.logica;
 
 import modelo.Persona;
 import modelo.persistencia.FicheroPersona;
+import modelo.persistencia.JavaJDPersona;
 
 /**
  *
@@ -14,39 +15,31 @@ import modelo.persistencia.FicheroPersona;
  */
 public class GestionPersona {
     // Lista, HashMap
+    // private Persona persona;
 
     private static GestionPersona instancia;
-    
-    
-    
-    public enum TipoResultado {OK, SIN_VALORES, EDAD_MAL, ERROR_IO};
-
-    
+    private IPersonaDAO daoPersona = new JavaJDPersona(); //FicheroPersona.getInstancia();
+    private GestionPersona() { }    
     public static GestionPersona getInstancia() {
         if (instancia == null) instancia = new GestionPersona();
         return instancia;
-    }    
-    
-    
+    }
+    public enum TipoResultado {OK, SIN_VALORES, EDAD_MAL, ERR_IO};
     
     private boolean validarDatosPersona(String nombre, String edad) {
-        return !nombre.isEmpty() && !edad.isEmpty();
+        return ! nombre.isEmpty() && ! edad.isEmpty();
     }
-    
     private boolean validarEdad(String edad) {
        return edad.matches("^[1-9][0-9]*$");
     }
-    
     public TipoResultado guardarPersona(String nombre, String edad) {
         if (validarDatosPersona(nombre, edad)) {
             if (validarEdad(edad)) {
                 int iEdad = Integer.parseInt(edad);
-                
-                if(FicheroPersona.guardarPersona(new Persona(nombre,iEdad)))
+                if (daoPersona.guardarPersona(new Persona(nombre, iEdad)))
                     return TipoResultado.OK;
-                else return TipoResultado.ERROR_IO;
-                
-                
+                else
+                    return TipoResultado.ERR_IO;
             } else {
                 return TipoResultado.EDAD_MAL;
             }
@@ -54,13 +47,7 @@ public class GestionPersona {
             return TipoResultado.SIN_VALORES;
         }
     }
-    
-        
-    private GestionPersona() { 
-
-    }    
-    
     public Persona getPersona() {
-        return FicheroPersona.leerPersona();
+        return daoPersona.leerPersona();
     }
 }
