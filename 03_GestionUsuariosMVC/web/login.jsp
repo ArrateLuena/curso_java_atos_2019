@@ -13,10 +13,11 @@
     </head>
     <body>
         <h1>Introduzca sus datos</h1>
-        <form method="get" action="">
+        <form method="get" action="usuario.do">
             <p>Email: <input type="text" name="email" id="email" required/></p>
             <p>Contraseña: <input type="password" name="pass" id="pass" required/></p>
             <input type="submit" value="Login"/>
+            <input type="hidden" value="doGet" name="joker" id="joker"/>
         </form>
     </body>
 </html>

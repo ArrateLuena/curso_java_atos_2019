@@ -5,6 +5,7 @@
  */
 package modelo.logica;
 
+import java.util.ArrayList;
 import modelo.Usuario;
 import modelo.persistencia.JavaJDUsuario;
 
@@ -18,34 +19,45 @@ public class GestionUsuario {
 
     private static GestionUsuario instancia;
     private IUsuarioDAO daoUsuario = new JavaJDUsuario(); //FicheroPersona.getInstancia();
-    private GestionUsuario() { }    
+
+    private GestionUsuario() {
+    }
+
     public static GestionUsuario getInstancia() {
-        if (instancia == null) instancia = new GestionUsuario();
+        if (instancia == null) {
+            instancia = new GestionUsuario();
+        }
         return instancia;
     }
-    public enum TipoResultado {OK, SIN_VALORES, EDAD_MAL, ERR_IO, EMAIL_MAL};
-    
+
+    public enum TipoResultado {
+
+        OK, SIN_VALORES, EDAD_MAL, ERR_IO, EMAIL_MAL
+    };
+
     private boolean validarDatosUsuario(String nombre, String edad, String email, String pass) {
-        return ! nombre.isEmpty() && ! edad.isEmpty() && !email.isEmpty() && ! pass.isEmpty();
+        return !nombre.isEmpty() && !edad.isEmpty() && !email.isEmpty() && !pass.isEmpty();
     }
+
     private boolean validarEdad(String edad) {
-       return edad.matches("^[1-9][0-9]*$");
+        return edad.matches("^[1-9][0-9]*$");
     }
-    
-    private boolean validarEmail(String email){
+
+    private boolean validarEmail(String email) {
         return email.matches("^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,4})$");
     }
-    
+
     public TipoResultado guardarUsuario(String nombre, String edad, String email, String pass) {
         if (validarDatosUsuario(nombre, edad, email, pass)) {
             if (validarEdad(edad)) {
-                if (validarEmail(email)){
+                if (validarEmail(email)) {
 
-                    if (daoUsuario.guardarUsuario(new Usuario(nombre, edad, email, pass)))
+                    if (daoUsuario.guardarUsuario(new Usuario(nombre, edad, email, pass))) {
                         return TipoResultado.OK;
-                    else
+                    } else {
                         return TipoResultado.ERR_IO;
-                }else{
+                    }
+                } else {
                     return TipoResultado.EMAIL_MAL;
                 }
             } else {
@@ -55,7 +67,13 @@ public class GestionUsuario {
             return TipoResultado.SIN_VALORES;
         }
     }
-    public Usuario getUsuario() {
-        return daoUsuario.leerUsuario();
+
+    public Usuario getUsuario(String id) {
+        return daoUsuario.leerUsuario(id);
+    }
+
+    public ArrayList<Usuario> listarUsuarios() {
+        
+        return daoUsuario.listarUsuarios();
     }
 }

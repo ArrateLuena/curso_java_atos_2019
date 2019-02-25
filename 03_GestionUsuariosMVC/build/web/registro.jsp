@@ -19,6 +19,7 @@
             <p>Email: <input type="text" name="email" id="email" required/></p>
             <p>Contraseña: <input type="password" name="pass" id="pass" required/></p>
             <input type="submit" value="Enviar"/>
+            <input type="hidden" value="doPost" name="joker" id="joker"/>
         </form>
     </body>
 </html>

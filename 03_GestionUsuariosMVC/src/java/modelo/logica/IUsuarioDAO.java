@@ -5,6 +5,7 @@
  */
 package modelo.logica;
 
+import java.util.ArrayList;
 import modelo.Usuario;
 
 /**
@@ -15,5 +16,9 @@ public interface IUsuarioDAO {
     
     boolean guardarUsuario(Usuario usuario);
     
-    Usuario leerUsuario();
+    Usuario leerUsuario(String id);
+    
+    ArrayList<Usuario> listarUsuarios();
+    
+   
 }

@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import modelo.Usuario;
 import modelo.logica.GestionUsuario;
 
 /**
@@ -22,7 +23,30 @@ public class UsuariosServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        //Usuario u1 = GestionUsuario.getInstancia().getUsuario();
 
+        /*GestionUsuario.TipoResultado resultado;
+        resultado = GestionUsuario.getInstancia().getUsuario();
+        switch (resultado) {
+            case OK:
+                request.getSession().setAttribute("persona1",
+                        GestionUsuario.getInstancia().getUsuario());
+                request.getRequestDispatcher("exito.jsp").forward(request, response);
+                break;
+            case SIN_VALORES:
+                request.getRequestDispatcher("errorCampos.jsp").forward(request, response);
+                break;
+            case EDAD_MAL:
+                request.getRequestDispatcher("errorNumero.jsp").forward(request, response);
+                break;
+            case ERR_IO:
+                request.getRequestDispatcher("errorIO.jsp").forward(request, response);
+                break;
+            case EMAIL_MAL:
+                request.getRequestDispatcher("errorEmail.jsp").forward(request, response);
+                break;
+        }*/
     }
 
 
@@ -38,7 +62,7 @@ public class UsuariosServlet extends HttpServlet {
         resultado = GestionUsuario.getInstancia().guardarUsuario(nombre, edad, email, pass);
         switch (resultado) {
             case OK:
-                request.getSession().setAttribute("persona1",
+                request.getSession().setAttribute("usuario1",
                         GestionUsuario.getInstancia().getUsuario());
                 request.getRequestDispatcher("exito.jsp").forward(request, response);
                 break;

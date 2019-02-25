@@ -6,13 +6,14 @@
 package modelo;
 
 public class Usuario {
+    private String id;
     private String nombre;
     private String edad;
     private String email;
     private String contraseña;
 
 
-    public Usuario(String nombre, String edad, String email, String contraseña) {
+    public Usuario(String id, String nombre, String edad, String email, String contraseña) {
         this.nombre = nombre;
         this.edad = edad;
         this.email = email;
@@ -53,5 +54,7 @@ public class Usuario {
         this.contraseña = contraseña;
     }
     
-    
+    public String getId(){
+        return this.id;
+    }
 }

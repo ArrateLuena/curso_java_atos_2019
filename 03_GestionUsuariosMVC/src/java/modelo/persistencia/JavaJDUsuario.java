@@ -10,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import modelo.Usuario;
@@ -54,20 +55,45 @@ public class JavaJDUsuario implements IUsuarioDAO {
     }
 
     @Override
-    public Usuario leerUsuario() {
+    public Usuario leerUsuario(String id) {
         try (Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/Usuario",
                 "usuario", "usuario")) {
-            String squery = "SELECT id, nombre, edad, email, password FROM Usuario ORDER BY id DESC";
+            String squery = "SELECT id, nombre, edad, email, password FROM Usuario WHERE id=" + id;
             Statement stmt = con.createStatement();
             ResultSet res = stmt.executeQuery(squery);
             if (res.next()) {   // Cogemos cualquier persona (última o la primera...)
+                String id1 = res.getString("id");
                 String nombre = res.getString("nombre");
                 String email = res.getString("email");
                 String pass = res.getString("pass");
                 String edad = res.getString("edad");
-                return new Usuario(nombre, edad, email, pass);
+                return new Usuario(id1, nombre, edad, email, pass);
             }
             return null;
+        } catch (SQLException ex) {
+            return null;
+        }
+    }
+    
+    @Override
+    public ArrayList<Usuario> listarUsuarios() {
+        try (Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/Usuario",
+                "usuario", "usuario")) {
+            
+            ArrayList<Usuario> listaUsuarios = new ArrayList<>();
+            String squery = "SELECT id, nombre, edad, email, password FROM Usuario";
+            Statement stmt = con.createStatement();
+            ResultSet res = stmt.executeQuery(squery);
+            while (res.next()) { 
+                String id = res.getNString("id");
+                String nombre = res.getString("nombre");
+                String edad = res.getString("edad");
+                String email = res.getString("email");
+                String password = res.getString("password");
+                Usuario usu = new Usuario(id, nombre, edad, email, password);
+                listaUsuarios.add(usu);
+            }
+            return listaUsuarios;
         } catch (SQLException ex) {
             return null;
         }
