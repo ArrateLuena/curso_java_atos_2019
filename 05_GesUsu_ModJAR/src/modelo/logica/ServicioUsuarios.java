@@ -15,78 +15,79 @@ import modelo.persistencia.DerbyDBUsuario;
  */
 public class ServicioUsuarios {
 
-    IUsuarioDAO persistencia; 
+    IUsuarioDAO persistencia;
     public enum Resultado { Ok, CamposMal, NoLogin, ErrorDB };
     private static final ServicioUsuarios instancia = new ServicioUsuarios();
-    
     private ServicioUsuarios() {
-        persistencia = new DerbyDBUsuario(); 
+        persistencia = new DerbyDBUsuario();
     }
-
     public static ServicioUsuarios getInstancia() {
         return instancia;
     }
-
-    public Usuario crearUsuarioValido(int id, String nom, String strEdad, String email, String password){
-        
-        int iEdad = 0;
-        if (strEdad.matches("^[1-9][0-9]*$")) {
-            try {
-                iEdad = Integer.parseInt(strEdad);
-                
-                if (iEdad > 18){
-                    if (email.matches("^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,4})$")){
-                        return new Usuario(id, nom, iEdad, email, password);
+    public Usuario crearUsuarioValido(int id, String nom, String strEdad, String email, String password) {
+        if (!nom.isEmpty() && !strEdad.isEmpty() && !email.isEmpty() && !password.isEmpty()) 
+        {
+            if (strEdad.matches("^[1-9][0-9]*$")) {
+                try {
+                    int iEdad = 0;
+                    iEdad = Integer.parseInt(strEdad);
+                    if (iEdad > 18) {
+                       if (email.matches("^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,4})$")) {
+                           return new Usuario(id, nom, iEdad, email, password);
+                       } 
                     }
-                }              
-            } catch (NumberFormatException ex) {
+                } catch (NumberFormatException ex) {
+                }
             }
         }
         return null;
     }
-    
-    public Resultado add(String nom, String strEdad, String email, String passwd){
-
-        Usuario nuevoUsu = crearUsuarioValido(0, nom, strEdad, email, passwd);
+    public Resultado add(String nom, String strEdad, String email, String passwd) {
         
-        if (nuevoUsu != null){
-            if (this.persistencia.crear(nuevoUsu)){
+        Usuario nuevoUsu = crearUsuarioValido(0, nom, strEdad, email, passwd);
+        if (nuevoUsu != null) {
+            if (this.persistencia.crear(nuevoUsu)) {
                 return Resultado.Ok;
-            }else{
+            } else {
                 return Resultado.ErrorDB;
             }
-        }else{  
+        } else {
             return Resultado.CamposMal;
         }
     }
-
     public ArrayList<Usuario> obtenerTodos() {
         return persistencia.obtenerTodos();
     }
-    
-    public Usuario obtenerUno(String email){
-        return null;
+    public Usuario obtenerUno(String email) {
+        return this.persistencia.obtenerUno(email);
     }
-    
-    public Resultado modificar(int id, String nom, String strEdad, String email, String passwd){
-        return Resultado.CamposMal;
-    }
-    
-    public Resultado eliminar(String email){
-        return  Resultado.CamposMal;
-    }
-    
-    public Resultado validarLoginUsuario(String email, String password){
-        return Resultado.NoLogin;
-    }
-
-    public Usuario validacionPasswd(String email, String passwd) {
-        ArrayList<Usuario> todosUsuarios = persistencia.obtenerTodos();
-        for (Usuario usuario : todosUsuarios) {
-            if (usuario.getEmail().equals(email) && usuario.getPassword().equals(passwd)) {
-                return usuario;
+    public Resultado modificar(int id, String nom, String strEdad, String email, String passwd) {
+        
+        Usuario nuevoUsu = crearUsuarioValido(id, nom, strEdad, email, passwd);
+        if (nuevoUsu != null) {
+            if (this.persistencia.modificar(nuevoUsu)) {
+                return Resultado.Ok;
+            } else {
+                return Resultado.ErrorDB;
             }
+        } else {
+            return Resultado.CamposMal;
         }
-        return null;
+    }
+    public Resultado eliminar(String email) {
+        Usuario usu = this.persistencia.obtenerUno(email);
+        if (usu != null) {
+            if (this.persistencia.eliminar(email))
+                return Resultado.Ok;
+            else return Resultado.ErrorDB;
+        }
+        else return  Resultado.CamposMal;
+    }
+    public Resultado validarLoginUsuario(String email, String password) {
+        
+        Usuario usu = persistencia.obtenerUno(email);
+        if (usu != null && usu.getPassword().equals(password))
+            return Resultado.Ok;
+        return Resultado.NoLogin;
     }
 }
